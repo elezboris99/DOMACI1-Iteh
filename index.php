@@ -1,3 +1,30 @@
+<?php 
+require "DBBroker.php";
+require "model/user.php";
+
+session_start();
+
+if (isset($_POST['username']) && isset($_POST['password'])) {
+    $name = $_POST['username'];
+    $password = $_POST['password'];
+
+    $rs = User::logIn($name, $password, $conn);
+
+    if ($rs->num_rows == 1) {
+        echo "Uspesno ste se prijavili";
+        $_SESSION['loggeduser'] = "prijavljen";
+        $_SESSION['idu'] = $rs->fetch_assoc()['idu'];
+        header('Location: home.php');
+        exit();
+    } else {
+        echo '<script type="text/javascript">alert("Pogresni podaci za login");</script>';
+        exit();
+    }
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,25 +35,18 @@
 </head>
 <body>
 <div id="header">
-    
-    <button class="dropbtn">Kontakt</button>
-    <div class="dropdown-content">
-      <p>Email: narudzba@naruci.com</p>
-      <p>Telefon: 064 123 1234</p>
-  </div>
         <h1>Lista narudžbi</h1>
        
     </div>
     <div id = "body">
     <div class="login-container">
         <h2>Login/Register</h2>
-        <form>
+        <form method="POST" action="#">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
             <input type="submit" value="Login">
-            <input type="submit" value="Register">
         </form>
     </div>
 </div>

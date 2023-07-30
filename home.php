@@ -10,11 +10,7 @@
 <body>
     <div id="header">
 
-        <button class="dropbtn">Kontakt</button>
-        <div class="dropdown-content">
-            <p>Email: narudzba@naruci.com</p>
-            <p>Telefon: 064 123 1234</p>
-        </div>
+       
         <h1>Lista narudžbi</h1>
 
     </div>
@@ -134,11 +130,5 @@
     </div>
 
 </body>
-
-
-
-
-
 <script src="js/home.js"></script>
-
 </html>
