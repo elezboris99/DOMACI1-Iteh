@@ -1,4 +1,24 @@
-<?php ?>
+<?php
+require "model/narudzba.php";
+require "DBBroker.php";
+
+session_start();
+if (empty($_SESSION['loggeduser']) || $_SESSION['loggeduser'] == '') {
+    header("Location: index.php");
+    die();
+}
+
+$result = Narudzba::getAll($conn);
+if (!$result) {
+    echo "Greska kod upita<br>";
+    die();
+}
+if ($result->num_rows == 0) {
+    echo "Nema narudzbi";
+    die();
+}
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -8,112 +28,37 @@
 </head>
 
 <body>
+
     <div id="header">
-
-       
         <h1>Lista narudžbi</h1>
-
     </div>
     <div id="content">
         <ul>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-                <label class="radio-btn">
-                    <input type="radio" name="checked-donut" value="obiljezen" >
-                </label>
-            </li>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-            </li>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-            </li>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-            </li>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-            </li>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-            </li>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-            </li>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-            </li>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-            </li>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-            </li>
-            <li>
-                <strong>Jabuke</strong>
-                <div class="order-info">Količina: 5 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Ivan</div>
-            </li>
-
-            <li>
-                <strong>Kruške</strong>
-                <div class="order-info">Količina: 2 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodala: Petra</div>
-            </li>
-            <li>
-                <strong>Paradajz</strong>
-                <div class="order-info">Količina: 3 kg</div>
-                <div class="order-info">Tip mjere: kg</div>
-                <div class="added-by">Dodao: Marko</div>
-            </li>
-            <li>
-                <strong>Banane</strong>
-                <div class="order-info">Količina: 10 kom</div>
-                <div class="order-info">Tip mjere: kom</div>
-                <div class="added-by">Dodala: Ana</div>
-            </li>
-
+            <?php
+            while ($red = $result->fetch_array()) {
+            ?>
+                <li>
+                    <strong><?php echo $red["proizvod"] ?></strong>
+                    <div class="order-info"><?php echo $red["id"] ?></div>
+                    <div class="order-info"><?php echo $red["kolicina"] ?></div>
+                    <div class="order-info"><?php echo $red["mjera"] ?></div>
+                    <div class="added-by"><?php echo $red["dodao"] ?></div>
+                    <label class="radio-btn">
+                        <input type="radio" name="checked-donut" value="obiljezen">
+                    </label>
+                </li>
+            <?php
+            }
+            ?>
         </ul>
     </div>
 
 
-
+ 
     <div class="container">
         <div class="box">
-            <h4>Pretgraga</h4>
-            <input type="text" id="myInput" class="btn" placeholder="Pretrazi spisak" onkeyup="pretrazi()">
+            <h4>Sakrij/Prikazi spisak</h4>
+            <img src="img/prikaz.png" onclick="prikazi() " id="icon">
         </div>
         <div class="box">
             <h4>Izmeni</h4>
@@ -125,10 +70,80 @@
         </div>
         <div class="box">
             <h4>Dodaj novi</h4>
-            <img src="img/add.png" id="icon">
+           <button id="dodajNarudzbu"><img src="img/add.png" id="icon"></button> 
         </div>
     </div>
 
+    <div class="formaNoviProizvod" id="dodajModel" style="display: none;">
+        <form action="action_page.php">
+            <div class="row">
+                <div class="col-25">
+                    <label for="fname">Naziv proizvoda:</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" id="fname" name="firstname" placeholder="Proizvod..">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Kolicina</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" id="lname" name="lastname" placeholder="Kolicina..">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="country">Mjera</label>
+                </div>
+                <div class="col-75">
+                    <select id="country" name="country">
+                        <option value="kilogram">KG</option>
+                        <option value="komad">Komad</option>
+                        <option value="litar">L</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="lname">Dodao</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" id="lname" name="lastname" placeholder="Korisnik..">
+                </div>
+            </div>
+
+            <div class="row">
+                <input type="submit" value="Potvrdi">
+            </div>
+            <button type="button" id="ugasiDodavanje">Zatvori</button>
+        </form>
+    </div>
+
+
+
+
+
+
+
+    <script src="js/home.js"></script>
+<script>  const showFormButton = document.getElementById('dodajNarudzbu');
+  const myForm = document.getElementById('dodajModel');
+
+  showFormButton.addEventListener('click', function() {
+    myForm.style.display = 'block'; // Prikaži formu kada je gumb kliknut
+  });
+  
+  const showFormButton2 = document.getElementById('ugasiDodavanje');
+  const myForm2 = document.getElementById('dodajModel');
+  showFormButton2.addEventListener('click', function() {
+    myForm2.style.display = 'none'; // Prikaži formu kada je gumb kliknut
+  });
+  
+  
+  
+  </script>
+
 </body>
-<script src="js/home.js"></script>
+
 </html>

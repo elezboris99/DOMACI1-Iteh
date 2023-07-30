@@ -18,7 +18,6 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
         exit();
     } else {
         echo '<script type="text/javascript">alert("Pogresni podaci za login");</script>';
-        exit();
     }
 }
 
