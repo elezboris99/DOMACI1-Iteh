@@ -64,7 +64,7 @@ if ($result->num_rows == 0) {
         </div>
         <div class="box">
             <h4>Izmeni</h4>
-          <button id="btnizmeniNarudzbu" onclick="provjeriOznaku()"><img src="img/change.png" id="icon"></button>  
+          <button id="btnizmeniNarudzbu"><img src="img/change.png" id="icon"></button>  
         </div>
         <div class="box">
             <h4>Obrisi</h4>
