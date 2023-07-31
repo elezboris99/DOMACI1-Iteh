@@ -41,8 +41,7 @@ $(document).ready(function () {
         },
         cache: false,
         success: function (dataResult) {
-          var dataResult = JSON.parse(dataResult);
-          if (dataResult.statusCode == 200) {
+          if (dataResult == "Success") {
             console.log("Ubacen proizvod");
 
 
@@ -63,15 +62,15 @@ $(document).ready(function () {
 
 const showFormButton3 = document.getElementById('btnizmeniNarudzbu');
 const myForm3 = document.getElementById('izmeniModel');
-
+var idZaIzmenu;
 showFormButton3.addEventListener('click', function () {
-  const radioGumbi = document.getElementsByName("checked-donut");
+  const radioDugme = document.getElementsByName("checked-donut");
 
-  for (let i = 0; i < radioGumbi.length; i++) {
-    if (radioGumbi[i].checked) {
-      document.getElementById("idIzmena").value = radioGumbi[i].value;
-      console.log(radioGumbi[i].value);
-
+  for (let i = 0; i < radioDugme.length; i++) {
+    if (radioDugme[i].checked) {
+      document.getElementById("idIzmena").value = radioDugme[i].value;
+      console.log(radioDugme[i].value);
+      idZaIzmenu = radioDugme[i].value;
       myForm3.style.display = 'block';
       break;
     }
@@ -90,4 +89,100 @@ const polje = document.getElementById("idIzmena");
 
 polje.addEventListener("keydown", function (event) {
   event.preventDefault();
+});
+
+$(document).ready(function () {
+  $('#btnIzmeni').on('click', function () {
+    var proizvod = $('#proizvodIzmena').val();
+    var kolicina = $('#kolicinaIzmena').val();
+    var mjera = $('#mjeraIzmena').val();
+    var dodao = $('#dodaoIzmena').val();
+    var id = idZaIzmenu;
+    if (id != "" && proizvod != "" && kolicina != "" && mjera != "" && dodao != "") {
+      console.log(idZaIzmenu);
+      console.log(proizvod);
+      console.log(kolicina);
+      console.log(mjera);
+      console.log(dodao);
+
+      $.ajax({
+        url: "handler/update.php",
+        type: "POST",
+        data: {
+          id: id,
+          proizvod: proizvod,
+          kolicina: kolicina,
+          mjera: mjera,
+          dodao: dodao
+        },
+        cache: false,
+        success: function (dataResult) {
+          if (dataResult == "Success") {
+            console.log("Ubacen proizvod");
+
+
+            alert("Ubacen novi proizvod na spisak!");
+          }
+          else if (dataResult.statusCode == 201) {
+            alert("Desila se greska!");
+          }
+
+        }
+      });
+    }
+    else {
+      alert('Popunite sve polja !');
+    }
+
+  });
+});
+var idZaBrisanje=-1;
+function obrisiStavku() {
+  const radioDugme = document.getElementsByName("checked-donut");
+  var testDugme = 0;
+  for (let i = 0; i < radioDugme.length; i++) {
+    if (radioDugme[i].checked) {
+      console.log(radioDugme[i].value);
+idZaBrisanje=radioDugme[i].value;
+      testDugme = 1;
+     
+    }
+
+  }
+  if (testDugme == 0) {
+    alert("Nije izabrana stavka za brisanje!")
+  }
+}
+
+
+$(document).ready(function () {
+  $('#btnObrisiNarudzbu').on('click', function () {
+    var id = idZaBrisanje;
+    if(id!=-1){
+  
+      console.log(id);
+      $.ajax({
+        url: "handler/delete.php",
+        type: "POST",
+        data: {
+          id: id
+        },
+        cache: false,
+        success: function (dataResult) {
+          
+          if (dataResult == "Success") {
+            console.log("Obrisan proizvod");
+            alert("Obrisan proizvod sa spiska!");
+            location.reload();
+          }
+          else if (dataResult.statusCode == 201) {
+            alert("Desila se greska!");
+          }
+
+        }
+      });
+    }
+  
+
+  });
 });

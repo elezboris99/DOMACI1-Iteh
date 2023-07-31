@@ -68,15 +68,16 @@ if ($result->num_rows == 0) {
         </div>
         <div class="box">
             <h4>Obrisi</h4>
-            <img src="img/delete.png" id="icon">
+            <button id="btnObrisiNarudzbu" onclick="obrisiStavku()">  <img src="img/delete.png" id="icon"></button>  
         </div>
         <div class="box">
             <h4>Dodaj novi</h4>
             <button id="dodajNarudzbu"  ><img src="img/add.png" id="icon"></button>
         </div>
     </div>
-
+<center>
     <div class="formaNoviProizvod" id="dodajModel" style="display: none;">
+    <h4>Dodaj novu stavku:</h4>
         <form action="#" name="NoviProizvod" method="post" id="dodajForm">
             <div class="row">
                 <div class="col-25">
@@ -121,9 +122,9 @@ if ($result->num_rows == 0) {
             <button type="button" id="ugasiDodavanje">Zatvori</button>
         </form>
     </div>
-
-
+    
     <div class="formaNoviProizvod" id="izmeniModel" style="display: none;">
+    <h4>Izmeni stavku:</h4>
         <form action="#" name="IzmeniProizvod" method="post" id="izmeniForm">
         <div class="row">
                 <div class="col-25">
@@ -177,7 +178,7 @@ if ($result->num_rows == 0) {
         </form>
     </div>
 
-
+    </center>
 
 
 
