@@ -99,12 +99,7 @@ $(document).ready(function () {
     var dodao = $('#dodaoIzmena').val();
     var id = idZaIzmenu;
     if (id != "" && proizvod != "" && kolicina != "" && mjera != "" && dodao != "") {
-      console.log(idZaIzmenu);
-      console.log(proizvod);
-      console.log(kolicina);
-      console.log(mjera);
-      console.log(dodao);
-
+      console.log(idZaIzmenu); console.log(proizvod); console.log(kolicina); console.log(mjera); console.log(dodao);
       $.ajax({
         url: "handler/update.php",
         type: "POST",
@@ -126,7 +121,6 @@ $(document).ready(function () {
           else if (dataResult.statusCode == 201) {
             alert("Desila se greska!");
           }
-
         }
       });
     }
